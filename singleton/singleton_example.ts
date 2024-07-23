@@ -1,5 +1,5 @@
-function Singleton<T extends { new(...args: any[]): {} }>(constructor: T) {
-    let instance: T;
+export function Singleton<T extends { new(...args: any[]): {} }>(constructor: T) {
+    let instance: InstanceType<T> | null = null;
 
     const handler = {
         construct(target: T, args: any[]) {
