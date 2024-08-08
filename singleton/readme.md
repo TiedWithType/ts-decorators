@@ -16,18 +16,18 @@ The `Singleton` decorator ensures that a class always returns the same instance,
 
 ```typescript
 function Singleton<T extends { new (...args: any[]): {} }>(constructor: T) {
-    let instance: T;
+  let instance: T;
 
-    const handler = {
-        construct(target: T, args: any[]) {
-            if (!instance) {
-                instance = Reflect.construct(target, args);
-            }
-            return instance;
-        }
-    };
+  const handler = {
+    construct(target: T, args: any[]) {
+      if (!instance) {
+        instance = Reflect.construct(target, args);
+      }
+      return instance;
+    },
+  };
 
-    return new Proxy(constructor, handler);
+  return new Proxy(constructor, handler);
 }
 ```
 
@@ -38,41 +38,41 @@ We define three service classes (`MyServiceA`, `MyServiceB`, `MyServiceC`), each
 ```typescript
 @Singleton
 class MyServiceA {
-    private data: number;
+  private data: number;
 
-    constructor() {
-        this.data = Math.random();
-    }
+  constructor() {
+    this.data = Math.random();
+  }
 
-    public getData(): number {
-        return this.data;
-    }
+  public getData(): number {
+    return this.data;
+  }
 }
 
 @Singleton
 class MyServiceB {
-    private data: number;
+  private data: number;
 
-    constructor() {
-        this.data = Math.random();
-    }
+  constructor() {
+    this.data = Math.random();
+  }
 
-    public getData(): number {
-        return this.data;
-    }
+  public getData(): number {
+    return this.data;
+  }
 }
 
 @Singleton
 class MyServiceC {
-    private data: number;
+  private data: number;
 
-    constructor() {
-        this.data = Math.random();
-    }
+  constructor() {
+    this.data = Math.random();
+  }
 
-    public getData(): number {
-        return this.data;
-    }
+  public getData(): number {
+    return this.data;
+  }
 }
 ```
 
@@ -90,39 +90,48 @@ const serviceB2 = new MyServiceB();
 const serviceC1 = new MyServiceC();
 const serviceC2 = new MyServiceC();
 
-console.log('MyServiceA instances are the same:', serviceA1 === serviceA2); // true
-console.log('MyServiceB instances are the same:', serviceB1 === serviceB2); // true
-console.log('MyServiceC instances are the same:', serviceC1 === serviceC2); // true
+console.log("MyServiceA instances are the same:", serviceA1 === serviceA2); // true
+console.log("MyServiceB instances are the same:", serviceB1 === serviceB2); // true
+console.log("MyServiceC instances are the same:", serviceC1 === serviceC2); // true
 
-console.log('MyServiceA and MyServiceB instances are the same:', serviceA1 === serviceB1); // false
-console.log('MyServiceA and MyServiceC instances are the same:', serviceA1 === serviceC1); // false
-console.log('MyServiceB and MyServiceC instances are the same:', serviceB1 === serviceC1); // false
+console.log(
+  "MyServiceA and MyServiceB instances are the same:",
+  serviceA1 === serviceB1,
+); // false
+console.log(
+  "MyServiceA and MyServiceC instances are the same:",
+  serviceA1 === serviceC1,
+); // false
+console.log(
+  "MyServiceB and MyServiceC instances are the same:",
+  serviceB1 === serviceC1,
+); // false
 
-console.log('MyServiceA1 data:', serviceA1.getData());
-console.log('MyServiceA2 data:', serviceA2.getData());
+console.log("MyServiceA1 data:", serviceA1.getData());
+console.log("MyServiceA2 data:", serviceA2.getData());
 
-console.log('MyServiceB1 data:', serviceB1.getData());
-console.log('MyServiceB2 data:', serviceB2.getData());
+console.log("MyServiceB1 data:", serviceB1.getData());
+console.log("MyServiceB2 data:", serviceB2.getData());
 
-console.log('MyServiceC1 data:', serviceC1.getData());
-console.log('MyServiceC2 data:', serviceC2.getData());
+console.log("MyServiceC1 data:", serviceC1.getData());
+console.log("MyServiceC2 data:", serviceC2.getData());
 ```
 
 ## How to Run
 
 1. Clone the repository.
 2. Install TypeScript if not already installed:
-    ```sh
-    npm install -g typescript
-    ```
+   ```sh
+   npm install -g typescript
+   ```
 3. Compile the TypeScript files:
-    ```sh
-    tsc
-    ```
+   ```sh
+   tsc
+   ```
 4. Run the compiled JavaScript:
-    ```sh
-    node <compiled_file>.js
-    ```
+   ```sh
+   node <compiled_file>.js
+   ```
 
 ## Output
 

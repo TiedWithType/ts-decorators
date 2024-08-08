@@ -1,12 +1,12 @@
 {
- "compilerOptions": {
-  "target": "ES2022",
-  "module": "ESNext",
-  "moduleDetection": "auto",
-  "moduleResolution": "Bundler",
-  "experimentalDecorators": true,
-  "esModuleInterop": true,
-  "isolatedModules": true,
-  "lib": ["Dom", "ESnext", "Decorators"]
- }
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleDetection": "auto",
+    "moduleResolution": "Bundler",
+    "experimentalDecorators": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "lib": ["Dom", "ESnext", "Decorators"]
+  }
 }

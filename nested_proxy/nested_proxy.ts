@@ -1,17 +1,26 @@
-function createNestedProxy() {
- return new Proxy({ }, {
-  get: (target, prop, receiver) => {
-   if (!(prop in target)) {
-    target[prop] = createNestedProxy();
-   }
-   return Reflect.get(target, prop, receiver);
-  },
-  set: (target, prop, value, receiver) => {
-   return Reflect.set(target, prop, value, receiver);
-  }
- });
-}
+export const createNestedProxy = <T extends object>(inheritFrom?: T): T => {
+  return new Proxy(inheritFrom ?? ({} as T), {
+    get(target: T, property: string | symbol): any {
+      const value = Reflect.get(target, property);
 
-export function NestedProxy(a, b) {
- return a[b] = createNestedProxy();
-}
+      if (
+        typeof property === "string" &&
+        (value === undefined || value === null)
+      ) {
+        const newProxy = createNestedProxy();
+        Reflect.set(target, property, newProxy);
+        return newProxy;
+      }
+
+      return value;
+    },
+    set(
+      target: T,
+      property: string | symbol,
+      value: any,
+      receiver: any,
+    ): boolean {
+      return Reflect.set(target, property, value, receiver);
+    },
+  });
+};

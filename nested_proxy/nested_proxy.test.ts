@@ -1,40 +1,58 @@
-import { describe, it, expect } from 'vitest';
-import { NestedProxy } from "./nested_proxy";
+import { describe, it, expect } from "vitest";
+import { createNestedProxy } from "./nested_proxy"; // Zaktualizuj ścieżkę do pliku z funkcją
 
-class ExampleClass {
- @NestedProxy static Store;
-}
+describe("createNestedProxy", () => {
+  it("should create nested proxy objects dynamically", () => {
+    const proxy = createNestedProxy();
 
-const { Store } = ExampleClass;
+    // Ustawiamy głęboko zagnieżdżoną wartość
+    proxy.a.b.c.d = 42;
 
-describe('Store Proxy', () => {
-    it('should dynamically create nested properties', () => {
-        Store.x.y.z = 1;
-        Store.a.b = 2;
+    // Sprawdzamy, czy dostęp do tej wartości zwraca poprawny wynik
+    expect(proxy.a.b.c.d).toBe(42);
+  });
 
-        expect(Store.x.y.z).toBe(1);
-        expect(Store.a.b).toBe(2);
-    });
+  it("should allow setting and getting properties on the proxy", () => {
+    const proxy = createNestedProxy();
 
-    it('should handle deeply nested properties', () => {
-        Store.level1.level2.level3.level4.value = 'test';
+    // Ustawiamy proste wartości
+    proxy.foo = "bar";
+    proxy.num = 123;
 
-        expect(Store.level1.level2.level3.level4.value).toBe('test');
-    });
+    // Sprawdzamy, czy właściwości zostały poprawnie ustawione
+    expect(proxy.foo).toBe("bar");
+    expect(proxy.num).toBe(123);
+  });
 
-    it('should allow modification of existing properties', () => {
-        Store.x.y.z = 10;
-        Store.a.b = 20;
+  it("should inherit properties from the provided object", () => {
+    const baseObject = { existing: 100 };
+    const proxy = createNestedProxy(baseObject);
 
-        expect(Store.x.y.z).toBe(10);
-        expect(Store.a.b).toBe(20);
-    });
+    // Sprawdzamy, czy odziedziczone właściwości są dostępne
+    expect(proxy.existing).toBe(100);
 
-    it('should not affect other properties when a new property is added', () => {
-        Store.newProp = 'newValue';
+    // Ustawiamy nową wartość w zagnieżdżonym obiekcie
+    proxy.newProp = "test";
 
-        expect(Store.newProp).toBe('newValue');
-        expect(Store.x.y.z).toBe(10);  // Sprawdzamy, czy istniejące właściwości są nienaruszone
-        expect(Store.a.b).toBe(20);
-    });
+    // Sprawdzamy, czy nowa właściwość została poprawnie ustawiona
+    expect(proxy.newProp).toBe("test");
+  });
+
+  it("should not overwrite existing properties in inherited object", () => {
+    const baseObject = { existing: 100 };
+    const proxy = createNestedProxy(baseObject);
+
+    // Próbujemy nadpisać istniejącą właściwość
+    proxy.existing = 200;
+
+    // Sprawdzamy, czy właściwość została poprawnie nadpisana
+    expect(proxy.existing).toBe(200);
+  });
+
+  it("should create nested proxies for missing properties", () => {
+    const proxy = createNestedProxy();
+
+    // Sprawdzamy, czy zagnieżdżone właściwości są tworzone dynamicznie
+    expect(proxy.foo.bar.baz).toEqual({});
+  });
 });
